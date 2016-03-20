@@ -4,15 +4,27 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Настройки</string>
 
-    <string name="navigation_item_1">Item_1</string>
-    <string name="navigation_item_2">Item_2</string>
+    <string name="navigation_item_1">Галерея</string>
+    <string name="navigation_item_2">Яфотки</string>
+    <string name="navigation_item_3">Кэш</string>
 
-    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="theme_title">Выбор темы</string>
+    <string name="theme_summary">Выберите тему приложения</string>
 
-    <string name="subactivity_name">PictureInfo!</string>
-    <string name="menu_slow_animations">Slow</string>
+    <string-array name="theme_entries">
+        <item>Светлая тема</item>
+        <item>Темная тема</item>
+    </string-array>
 
+    <string-array name="theme_entry_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string name="cols_title">Число столбцов</string>
+
+    <string name="subactivity_name">Полноразмерное фото</string>
 
 </resources>

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
@@ -11,6 +12,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -31,7 +33,7 @@ public class PlaceholderFragment extends Fragment {
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static final String PACKAGE = "com.example.android.imagegrid";
 
-    private int mColumnCount = 5;
+    private int mColumnCount;
     boolean newApi = true;
 
     RecyclerView mGrid;
@@ -54,6 +56,11 @@ public class PlaceholderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+
+        String gridColumns = sharedPref.getString("pref_col_num", "4");
+        mColumnCount = Integer.parseInt(gridColumns);
+
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         mGrid = (RecyclerView) rootView.findViewById(R.id.grid);
@@ -65,17 +72,20 @@ public class PlaceholderFragment extends Fragment {
     @Override
     public void onViewCreated(View view,Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mGrid.setLayoutManager(new GridLayoutManager(getActivity(), 5));
+        GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(), mColumnCount);
+        mGrid.setLayoutManager(mLayoutManager);
+
         mGrid.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-                outRect.top = 5;
-                outRect.bottom = 5;
+                outRect.top = 2;
+                outRect.bottom = 2;
+                outRect.left = 2;
+                outRect.right = 2;
             }
         });
 
 
-        //adapter.SetOnItemClickListener(new GridAdapter.OnItemClickListener() {
         mGrid.addOnItemTouchListener(new RecyclerItemClickListener(mContext,
                                                                     new RecyclerItemClickListener.OnItemClickListener() {
             @Override

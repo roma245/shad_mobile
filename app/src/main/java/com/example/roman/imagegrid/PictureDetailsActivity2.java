@@ -6,6 +6,9 @@ package com.example.roman.imagegrid;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.view.MotionEventCompat;
 import android.view.MotionEvent;
@@ -26,6 +29,18 @@ public class PictureDetailsActivity2 extends Activity {
     private float totalDiffY;
     private static final int INVALID_POINTER_ID = -1;
 
+    //variable for counting two successive up-down events
+    private int clickCount = 0;
+    //variable for storing the time of first click
+    private long startTime;
+    //variable for calculating the total time
+    private long duration;
+    //constant for defining the time duration between the click that can be considered as double-tap
+    private static final int MAX_DURATION = 500;
+
+    private boolean zoomStatus = false;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +53,7 @@ public class PictureDetailsActivity2 extends Activity {
                 bundle.getInt(PACKAGE_NAME + ".resourceId"));
 
         imageView.setImageBitmap(bitmap);
+
         setupZoom();
     }
 
@@ -46,11 +62,31 @@ public class PictureDetailsActivity2 extends Activity {
         scaleDetector = new ScaleGestureDetector(this, new ScaleListener());
     }
 
+
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         scaleDetector.onTouchEvent(ev);
 
         if (ev.getPointerCount() > 1) {
+            return true;
+        }
+
+       // TODO: for correct coordinates has to be scaled to min{screen.width, screen.height}
+       // final float scale = getResources().getDisplayMetrics().density;
+
+        int centerXOnImage=imageView.getWidth()/2;
+        int centerYOnImage=imageView.getHeight()/2;
+        int centerXOfImageOnScreen=imageView.getLeft()+centerXOnImage;
+        int centerYOfImageOnScreen=imageView.getTop()+centerYOnImage;
+
+        Rect rect = new Rect(
+                Math.round((imageView.getLeft()-centerXOfImageOnScreen)*scaleFactor+centerXOfImageOnScreen),
+                Math.round((imageView.getTop()-centerYOfImageOnScreen)*scaleFactor+centerYOfImageOnScreen),
+                Math.round((imageView.getRight()-centerXOfImageOnScreen)*scaleFactor+centerXOfImageOnScreen),
+                Math.round((imageView.getBottom()-centerYOfImageOnScreen)*scaleFactor)+centerYOfImageOnScreen);
+
+        if (!rect.contains((int) ev.getRawX(), (int) ev.getRawY())) {
+            this.finish();
             return true;
         }
 
@@ -67,6 +103,10 @@ public class PictureDetailsActivity2 extends Activity {
                 lastTouchY = y;
                 // Save the ID of this pointer (for dragging)
                 activePointerId = MotionEventCompat.getPointerId(ev, 0);
+
+                startTime = System.currentTimeMillis();
+                clickCount++;
+
                 break;
             }
 
@@ -97,6 +137,25 @@ public class PictureDetailsActivity2 extends Activity {
 
             case MotionEvent.ACTION_UP: {
                 activePointerId = INVALID_POINTER_ID;
+
+                long time = System.currentTimeMillis() - startTime;
+                duration=  duration + time;
+                if(clickCount == 2) {
+                    if (duration <= MAX_DURATION) {
+                        if (!zoomStatus) {
+                            scaleFactor = 2;
+                            zoomStatus = true;
+                        } else {
+                            scaleFactor = 1;
+                            zoomStatus = false;
+                        }
+                        imageView.setScaleX(scaleFactor);
+                        imageView.setScaleY(scaleFactor);
+                    }
+                    clickCount = 0;
+                    duration = 0;
+                }
+
                 break;
             }
 

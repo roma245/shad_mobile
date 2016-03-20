@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.roman.imagegrid.PictureData;
 import com.example.roman.imagegrid.R;
@@ -52,29 +53,31 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.GridHolder> {
 
     @Override
     public void onBindViewHolder(GridHolder holder, int position) {
-        PictureData pictureData = pictures.get(position);
-
+        PictureData pictureData = pictures.get(position % pictures.size());
+        String thumbnailText = String.valueOf(position+1);
         BitmapDrawable thumbnailDrawable =
                 new BitmapDrawable(resources, pictureData.thumbnail);
+
         thumbnailDrawable.setColorFilter(grayscaleFilter);
 
-        holder.image.setImageDrawable(thumbnailDrawable);
-        //            holder.image.setOnClickListener(thumbnailClickListener);
+        holder.image.setBackgroundDrawable(thumbnailDrawable);
+        //holder.image.setBackground(thumbnailDrawable);
+        holder.image.setText(thumbnailText);
         holder.image.setTag(pictureData);
     }
 
     @Override
     public int getItemCount() {
-        return pictures.size();
+        return Integer.MAX_VALUE;
     }
 
     public static class GridHolder extends RecyclerView.ViewHolder {
 
-        private ImageView image;
+        private TextView image;
 
         public GridHolder(View itemView) {
             super(itemView);
-            image = (ImageView) itemView;
+            image = (TextView) itemView;
         }
     }
 

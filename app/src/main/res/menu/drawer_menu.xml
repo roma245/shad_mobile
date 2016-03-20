@@ -1,18 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/navigation_item_1"
-            android:checked="true"
-            android:title="@string/navigation_item_1"/>
-        <!--android:icon="@drawable/ic_android"
-        android:title="@string/navigation_item_1"/>-->
+            android:id="@+id/gallery"
+            android:title="@string/navigation_item_1"
+            app:showAsAction="always"
+            android:icon="@drawable/ic_menu_gallery"/>
         <item
-            android:id="@+id/navigation_item_2"
-            android:title="@string/navigation_item_2"/>
-        <!--android:icon="@drawable/ic_android"
-        android:title="@string/navigation_item_2"/>-->
+            android:id="@+id/photo"
+            android:title="@string/navigation_item_2"
+            app:showAsAction="always"
+            android:icon="@drawable/ic_menu_camera"/>
+        <item
+            android:id="@+id/cache"
+            android:title="@string/navigation_item_3"
+            app:showAsAction="always"
+            android:icon="@drawable/ic_menu_slideshow"/>
     </group>
-
+    <group android:id="@+id/nav_footer"
+            android:checkableBehavior="single">
+        <item
+            android:id="@+id/settings"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/action_settings" />
+        <item
+            android:id="@+id/feedback"
+            android:icon="@drawable/ic_menu_send"
+            android:title="Написать отзыв" />
+    </group>
 </menu>
